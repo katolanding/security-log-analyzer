@@ -1,5 +1,4 @@
-# Security Log Analyzer
-![Python Tests](https://github.com/katolanding/security-log-analyzer/actions/workflows/python-tests.yml/badge.svg)
+# Security Log Analyzer ![Python Tests](https://github.com/katolanding/security-log-analyzer/actions/workflows/python-tests.yml/badge.svg) 
 Herramienta educativa en Python para analizar registros de autenticación SSH (`sshd`) de forma local.
 
 ## Funciones
