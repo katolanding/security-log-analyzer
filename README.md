@@ -1,51 +1,67 @@
-# Security Log Analyzer ![Python Tests](https://github.com/katolanding/security-log-analyzer/actions/workflows/python-tests.yml/badge.svg) 
-Herramienta educativa en Python para analizar registros de autenticación SSH (`sshd`) de forma local.
+# Security Log Analyzer
 
-## Funciones
+[![Python Tests](https://github.com/katolanding/security-log-analyzer/actions/workflows/python-tests.yml/badge.svg)](https://github.com/katolanding/security-log-analyzer/actions/workflows/python-tests.yml)
+
+Herramienta educativa en **Python** para analizar localmente registros de autenticación SSH (`sshd`). No requiere dependencias externas ni conexión a Internet.
+
+## ¿Qué hace?
 
 - Cuenta accesos SSH exitosos y fallidos.
-- Agrupa intentos fallidos por dirección IP y nombre de usuario.
-- Marca IPs con un número configurable de fallos.
-- Exporta informes JSON.
-- Funciona sin dependencias externas ni conexiones a Internet.
+- Agrupa intentos fallidos por dirección IP y usuario objetivo.
+- Marca las IP que alcanzan un umbral de fallos configurable.
+- Genera informes locales en JSON.
 
-> **Alcance:** un umbral de fallos no demuestra que una dirección IP sea maliciosa. Solo genera una señal para revisión. No bloquea conexiones ni sustituye un SIEM.
+> **Alcance:** una IP marcada necesita investigación; alcanzar un umbral no demuestra actividad maliciosa. La herramienta no bloquea conexiones y no sustituye un SIEM.
 
-## Requisitos
+## Demostración
 
-Python 3.10 o superior.
-
-## Uso
+Con Python 3.10 o superior, desde la raíz del repositorio:
 
 ```bash
 python src/analyzer.py samples/auth.log --threshold 5
-python src/analyzer.py samples/auth.log --threshold 3 --json report.json
 ```
 
-## Pruebas
+**Salida esperada con el archivo de ejemplo incluido:**
+
+```text
+Events: 7 | Failed: 6 | Successful: 1
+Suspicious IPs (>= 5 failures):
+  192.0.2.10: 5 failures
+```
+
+`192.0.2.10` pertenece a un rango reservado para documentación; los registros de `samples/auth.log` son ficticios.
+
+### Exportar un informe JSON
+
+```bash
+python src/analyzer.py samples/auth.log --threshold 5 --json report.json
+```
+
+El archivo `report.json` contendrá los recuentos, las IP agrupadas y el umbral aplicado. No subas informes de producción ni registros con datos personales.
+
+## Pruebas automatizadas
 
 ```bash
 python -m unittest discover -s tests -v
 ```
 
+El repositorio incluye **tres pruebas unitarias** y un flujo de GitHub Actions; la última ejecución consultada el **12 de noviembre de 2026** terminó correctamente. Consulta el estado vigente en la insignia superior.
+
 ## Estructura
 
+```text
+src/analyzer.py            Análisis de eventos y línea de comandos
+tests/test_analyzer.py     Pruebas unitarias
+samples/auth.log           Eventos ficticios de ejemplo
+.github/workflows/         Integración continua
 ```
-src/analyzer.py         # Parser, estadísticas y CLI
-tests/test_analyzer.py  # Pruebas unitarias
-samples/auth.log        # Eventos ficticios, sin datos personales
-```
 
-## Privacidad
+## Limitaciones y mejoras futuras
 
-Los logs pueden incluir direcciones IP y nombres de usuario reales. No subas registros de producción a GitHub. Los datos de ejemplo utilizan direcciones reservadas para documentación (`192.0.2.0/24`, `198.51.100.0/24` y `203.0.113.0/24`).
+- Detección de patrones por intervalo de tiempo.
+- Compatibilidad con otros formatos de registros.
+- Visualización de tendencias sin exponer registros sensibles.
 
-## Próximas mejoras
+## Autoría y aprendizaje
 
-- Detección de patrones temporales y eventos por hora.
-- Compatibilidad con formatos adicionales de registro.
-- Interfaz web y visualizaciones.
-
-## Autoría
-
-Proyecto de portafolio en desarrollo. Documenta las modificaciones que realices y comprende cada componente antes de presentarlo en entrevistas.
+Proyecto de portafolio con foco de aprendizaje en ciberseguridad.
